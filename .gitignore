@@ -1,5 +1,8 @@
+pack/
+slr1/
 a.out
-erro
+erro.txt
 gen.cpp
 tester.sh
 test
+cumulative.in
