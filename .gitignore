@@ -1,8 +1,12 @@
 pack/
+pack2/
 slr1/
 a.out
+cumulative.in
 erro.txt
 gen.cpp
-tester.sh
+input.in
+s_tester.sh
+syntatic
 test
-cumulative.in
+tester.sh

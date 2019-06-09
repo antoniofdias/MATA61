@@ -1,0 +1,140 @@
+#NON_TERMS
+S PROGRAM P_FUNCT FUNCT MAIN F_TYPE ARGS CODE TYPE E_ARIT DECL LINE MDR ASSIGN IF WHILE READ WRITE ALT_ARGS PAR CONST E_REL E_E E_NPL E_COMP LOP
+
+#TERMS
+, ; + - * / % ( ) [ ] { } = == > >= < <= != e escreve int le letra mainha nada nao ou real se senao tome uai vaza char string numConst realConst identifier
+
+#RULES
+S PROGRAM
+
+PROGRAM P_FUNCT FUNCT MAIN
+PROGRAM P_FUNCT MAIN
+PROGRAM FUNCT MAIN
+PROGRAM MAIN
+
+P_FUNCT P_FUNCT F_TYPE identifier ( ARGS ) ;
+P_FUNCT F_TYPE identifier ( ARGS ) ;
+P_FUNCT P_FUNCT F_TYPE identifier ( ) ;
+P_FUNCT F_TYPE identifier ( ) ;
+
+FUNCT FUNCT F_TYPE identifier ( ARGS ) { CODE }
+FUNCT F_TYPE identifier ( ARGS ) { CODE }
+FUNCT FUNCT F_TYPE identifier ( ARGS ) { }
+FUNCT F_TYPE identifier ( ARGS ) { }
+FUNCT FUNCT F_TYPE identifier ( ) { CODE }
+FUNCT F_TYPE identifier ( ) { CODE }
+FUNCT FUNCT F_TYPE identifier ( ) { }
+FUNCT F_TYPE identifier ( ) { }
+
+MAIN int mainha ( ) { CODE }
+MAIN int mainha ( ) { }
+
+F_TYPE int
+F_TYPE letra
+F_TYPE nada
+F_TYPE real
+
+ARGS ARGS , TYPE identifier
+ARGS TYPE identifier
+ARGS ARGS , TYPE identifier [ ]
+ARGS TYPE identifier [ ]
+
+CODE DECL LINE
+CODE DECL
+CODE LINE
+
+TYPE int
+TYPE letra
+TYPE real
+
+E_ARIT E_ARIT + MDR
+E_ARIT E_ARIT - MDR
+E_ARIT MDR
+
+DECL DECL TYPE identifier ;
+DECL TYPE identifier ;
+DECL DECL TYPE identifier [ E_ARIT ] ;
+DECL TYPE identifier [ E_ARIT ] ;
+DECL DECL TYPE identifier = E_ARIT ;
+DECL TYPE identifier = E_ARIT ;
+
+LINE LINE ASSIGN ;
+LINE ASSIGN ;
+LINE LINE IF
+LINE IF
+LINE LINE WHILE
+LINE WHILE
+LINE LINE READ ;
+LINE READ ;
+LINE LINE WRITE ;
+LINE WRITE ;
+LINE LINE vaza ;
+LINE vaza ;
+LINE LINE tome E_ARIT ;
+LINE tome E_ARIT ;
+LINE LINE tome ;
+LINE tome ;
+LINE LINE identifier ( ALT_ARGS ) ;
+LINE identifier ( ALT_ARGS ) ;
+LINE LINE identifier ( ) ;
+LINE identifier ( ) ;
+
+MDR MDR * PAR
+MDR MDR / PAR
+MDR MDR % PAR
+MDR PAR
+
+ASSIGN identifier = E_ARIT
+ASSIGN identifier [ E_ARIT ] = E_ARIT
+
+IF se ( E_REL ) { LINE } senao { LINE }
+IF se ( E_REL ) { LINE } senao { }
+IF se ( E_REL ) { } senao { LINE }
+IF se ( E_REL ) { } senao { }
+IF se ( E_REL ) { LINE }
+IF se ( E_REL ) { }
+
+WHILE uai ( E_REL ) { LINE }
+WHILE uai ( E_REL ) { }
+
+READ le ( identifier [ E_ARIT ] )
+READ le ( identifier )
+
+WRITE escreve ( E_ARIT )
+WRITE escreve ( string )
+
+ALT_ARGS ALT_ARGS , E_ARIT
+ALT_ARGS E_ARIT
+
+PAR ( E_ARIT )
+PAR - ( E_ARIT )
+PAR - CONST
+PAR CONST
+
+CONST identifier ( ALT_ARGS )
+CONST identifier ( )
+CONST identifier [ E_ARIT ]
+CONST identifier
+CONST numConst
+CONST realConst
+CONST char
+
+E_REL E_REL ou E_E
+E_REL E_E
+
+E_E E_E e E_NPL
+E_E E_NPL
+
+E_NPL ( E_REL )
+E_NPL nao E_COMP
+E_NPL nao ( E_REL )
+E_NPL E_COMP
+
+E_COMP E_ARIT LOP E_ARIT
+
+LOP ==
+LOP >
+LOP >=
+LOP <
+LOP <=
+LOP !=
