@@ -14,16 +14,17 @@
 #define ff first
 #define endl '\n'
 #define pb push_back
-#define mt make_token
+#define mn make_node
 
 using namespace std;
 
-struct token {
+struct node {
 	string type;
 	string value;
+	vector<node> children;
 };
 
-bool debugUno = false, debugDos = true;
+bool debugUno = false, debugDos = false, debugTres = true;
 char input[MAX + 1];
 int currentLine = 1;
 int currentColumn = 1;
@@ -32,7 +33,8 @@ string next_string;
 set<char> reserved = {',', ';', '+', '-', '*', '/', '%', '(', ')', '[', ']', '{', '}'};
 set<string> reserved_words = {"e", "escreve", "int", "le", "letra", "mainha", "nada", "nao", "ou", "real", "se", "senao", "tome", "uai", "vaza"};
 queue<pii> errors;
-vector<token> tokens;
+vector<node> nodes;
+node root;
 map<int, map<string, vector<string> > > table = {
 {0, {
 {"FUNCT", {"0", "0", "1", ""}},
@@ -2082,8 +2084,9 @@ int test_eqOp(int i);
 int test_gtOp(int i);
 int test_ltOp(int i);
 int test_df(int i);
-token make_token(string type, string value);
+node make_node(string type, string value);
 bool syntatic();
+void printTree();
 
 int main() {
 	bool input_flag = false;
@@ -2100,14 +2103,15 @@ int main() {
 			i = next_test(i);
 		}
 		if (errors.empty()) {
-			tokens.pb(mt("$", ""));
+			nodes.pb(mn("$", ""));
 			if (debugDos) {
-				for (token t : tokens) {
+				for (node t : nodes) {
 					cout << '(' << t.type << ", " << t.value << ") ";
 				}
 				cout << endl;
 			}
 			cout << (syntatic() ? "YES\n" : "NO\n");
+			if (debugTres) printTree();
 		}
 		else {
 			while (!errors.empty()) {
@@ -2152,7 +2156,7 @@ int next_test(int i) {
 	}
 	else if (reserved.count(input[i])) {
 		next_string = input[i];
-		tokens.pb(mt(next_string, ""));
+		nodes.pb(mn(next_string, ""));
 		currentColumn++;
 		return (i + 1);
 	}
@@ -2203,7 +2207,7 @@ int test_char(int i) {
 	}
 	else if (input[i] == '\n') {
 		if (input[i + 1] == '\'') {
-			tokens.pb(mt("char", "\n"));
+			nodes.pb(mn("char", "\n"));
 			currentLine++;
 			currentColumn = 2;
 			return (i + 2);
@@ -2218,7 +2222,7 @@ int test_char(int i) {
 	else {
 		if (input[i + 1] == '\'') {
 			next_string = input[i];
-			tokens.pb(mt("char", next_string));
+			nodes.pb(mn("char", next_string));
 			currentColumn += 2;
 			return (i + 2);
 		}
@@ -2263,7 +2267,7 @@ int test_string(int i) {
 			}
 		}
 		else if (input[i] == '"') {
-			tokens.pb(mt("string", next_string));
+			nodes.pb(mn("string", next_string));
 			if (debugUno) cout << "VALIDO\n";
 			currentColumn++;
 			return (i + 1);
@@ -2286,7 +2290,7 @@ int test_string(int i) {
 		return i;
 	}
 	else {
-		tokens.pb(mt("string", next_string));
+		nodes.pb(mn("string", next_string));
 		if (debugUno) cout << "VALIDO\n";
 		currentColumn++;
 		return (i + 1);
@@ -2328,7 +2332,7 @@ int test_numConst(int i) {
 	}
 	else {
 		string isThisTheRealLife = (real ? "realConst" : "numConst");
-		tokens.pb(mt(isThisTheRealLife, next_string));
+		nodes.pb(mn(isThisTheRealLife, next_string));
 		if (debugUno) cout << "VALIDO\n";
 	}
 	return i;
@@ -2362,10 +2366,10 @@ int test_identifier(int i) {
 	}
 	else {
 		if (reserved_words.count(next_string)) {
-			tokens.pb(mt(next_string, ""));
+			nodes.pb(mn(next_string, ""));
 		}
 		else {
-		tokens.pb(mt("identifier", next_string));
+		nodes.pb(mn("identifier", next_string));
 		}
 		if (debugUno) cout << "VALIDO\n";
 	}
@@ -2379,13 +2383,13 @@ int test_eqOp(int i) {
 
 	if(input[i + 1] == '=') {
 		if (debugUno) cout << "VALIDO\n";
-		tokens.pb(mt("==", ""));
+		nodes.pb(mn("==", ""));
 		currentColumn += 2;
 		return (i + 2);
 	}
 	else {
 		if (debugUno) cout << "VALIDO\n";
-		tokens.pb(mt("=", ""));
+		nodes.pb(mn("=", ""));
 		currentColumn++;
 		return (i + 1);
 	}
@@ -2398,13 +2402,13 @@ int test_gtOp(int i) {
 
 	if(input[i + 1] == '=') {
 		if (debugUno) cout << "VALIDO\n";
-		tokens.pb(mt(">=", ""));
+		nodes.pb(mn(">=", ""));
 		currentColumn += 2;
 		return (i + 2);
 	}
 	else {
 		if (debugUno) cout << "VALIDO\n";
-		tokens.pb(mt(">", ""));
+		nodes.pb(mn(">", ""));
 		currentColumn++;
 		return (i + 1);
 	}
@@ -2417,13 +2421,13 @@ int test_ltOp(int i) {
 
 	if(input[i + 1] == '=') {
 		if (debugUno) cout << "VALIDO\n";
-		tokens.pb(mt("<=", ""));
+		nodes.pb(mn("<=", ""));
 		currentColumn += 2;
 		return (i + 2);
 	}
 	else {
 		if (debugUno) cout << "VALIDO\n";
-		tokens.pb(mt("<", ""));
+		nodes.pb(mn("<", ""));
 		currentColumn++;
 		return (i + 1);
 	}
@@ -2436,7 +2440,7 @@ int test_df(int i) {
 
 	if(input[i + 1] == '=') {
 		if (debugUno) cout << "VALIDO\n";
-		tokens.pb(mt("!=", ""));
+		nodes.pb(mn("!=", ""));
 		currentColumn += 2;
 		return (i + 2);
 	}
@@ -2448,63 +2452,88 @@ int test_df(int i) {
 	}
 }
 
-token make_token(string type, string value) {
-	token created;
+node make_node(string type, string value) {
+	node created;
 	created.type = type;
 	created.value = value;
 	return created;
 }
 
 bool syntatic() {
-	stack<string> slr;
-	slr.push("0");
+	stack<node> slr;
+	node aux_node;
+	slr.push(mn("0", ""));
 	map<string, vector<string> > current_state;
-	string r_head;
-	vector<token>::iterator it = tokens.begin();
+	vector<node>::iterator it = nodes.begin();
 	while (1) {
-		current_state = table[stoi(slr.top())];
+		current_state = table[stoi(slr.top().type)];
 		if (current_state.count(it->type)) {
 			int prev_state, counter;
-			if (debugDos) cout << slr.top() << endl;
+			if (debugDos) cout << slr.top().type << endl;
 			switch (stoi(current_state[it->type][0])) {
 				case 0:
 					if (debugDos) cout << "NONE " << it->type << " " << it->value << endl;
 					break;
 				case 1:
 					if (debugDos) cout << "SHIFT " << it->type << " " << it->value << endl;
-					slr.push(it->type);
-					slr.push(current_state[it->type][2]);
+					slr.push(*it);
+					slr.push(mn(current_state[it->type][2], ""));
 					it++;
 					break;
 				case 2:
 					counter = stoi(current_state[it->type][1]);
 					counter *= 2;
 					while (counter--) {
-						//botar num node
+						if (counter % 2 == 0) {
+							aux_node.children.insert(aux_node.children.begin(), 1, slr.top());
+						}
 						slr.pop();
 					}
-					prev_state = stoi(slr.top());
-					r_head = current_state[it->type][3];
-					slr.push(r_head);
+					prev_state = stoi(slr.top().type);
+					aux_node.type = current_state[it->type][3];
+					slr.push(aux_node);
 					current_state = table[prev_state];
-					slr.push(current_state[r_head][2]);
+					slr.push(mn(current_state[aux_node.type][2], ""));
+					aux_node.children.clear();
 					if (debugDos) cout << "REDUCE " << slr.size() << " " << it->type << " " << it->value << endl;
 					break;
 				case 3:
-					counter = stoi(current_state[it->type][1]);
-					counter *= 2;
+					//counter = stoi(current_state[it->type][1]);
+					//counter *= 2;
 					if (debugDos) cout << "ACCEPT " << it->type << " " << it->value << endl;
-					while (counter--) {
-						//botar num node
+					while (slr.size() -  1) {
+						if (slr.size() % 2 == 0) {
+							aux_node.children.insert(aux_node.children.begin(), 1, slr.top());
+						}
 						slr.pop();
 					}
+					aux_node.type = "root";
+					root = aux_node;
 					return true;
 					break;
 			} 
 		}
 		else {
-			if (debugDos) cout << slr.top() << endl;
+			if (debugDos) cout << slr.top().type << endl;
 			return false;
+		}
+	}
+}
+
+void printTree() {
+	queue<node> bfs;
+	node visiting;
+	bfs.push(root);
+	while(!bfs.empty()) {
+		visiting = bfs.front();
+		bfs.pop();
+		if (visiting.children.size()) {
+			cout << visiting.type << " -> ";
+			for (node x : visiting.children) {
+				cout << x.type << " ";
+				bfs.push(x);
+			}
+			cout << endl;
 		}
 	}
 }
