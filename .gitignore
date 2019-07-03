@@ -1,12 +1,15 @@
 pack/
 pack2/
+pack3/
 slr1/
+1_tester.sh
+2_tester.sh
+3_tester.sh
 a.out
 cumulative.in
 erro.txt
 gen.cpp
 input.in
-s_tester.sh
 syntatic
+semantic
 test
-tester.sh

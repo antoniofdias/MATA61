@@ -1,5 +1,5 @@
 #NON_TERMS
-S PROGRAM P_FUNCT FUNCT MAIN F_TYPE ARGS CODE TYPE E_ARIT DECL LINE MDR ASSIGN IF WHILE READ WRITE ALT_ARGS PAR CONST E_REL E_E E_NPL E_COMP LOP
+S PROGRAM P_FUNCT FUNCT MAIN F_TYPE ARGS CODE TYPE E_ARIT DECL LINE MDR ASSIGN IF WHILE READ WRITE C_FUNCT ALT_ARGS PAR CONST E_REL E_E E_NPL E_COMP LOP ALT_C_FUNCT
 
 #TERMS
 , ; + - * / % ( ) [ ] { } = == > >= < <= != e escreve int le letra mainha nada nao ou real se senao tome uai vaza char string numConst realConst identifier
@@ -74,10 +74,8 @@ LINE LINE tome E_ARIT ;
 LINE tome E_ARIT ;
 LINE LINE tome ;
 LINE tome ;
-LINE LINE identifier ( ALT_ARGS ) ;
-LINE identifier ( ALT_ARGS ) ;
-LINE LINE identifier ( ) ;
-LINE identifier ( ) ;
+LINE LINE C_FUNCT ;
+LINE C_FUNCT ;
 
 MDR MDR * PAR
 MDR MDR / PAR
@@ -103,6 +101,9 @@ READ le ( identifier )
 WRITE escreve ( E_ARIT )
 WRITE escreve ( string )
 
+C_FUNCT identifier ( ALT_ARGS )
+C_FUNCT identifier ( )
+
 ALT_ARGS ALT_ARGS , E_ARIT
 ALT_ARGS E_ARIT
 
@@ -111,13 +112,15 @@ PAR - ( E_ARIT )
 PAR - CONST
 PAR CONST
 
-CONST identifier ( ALT_ARGS )
-CONST identifier ( )
+CONST ALT_C_FUNCT
 CONST identifier [ E_ARIT ]
 CONST identifier
 CONST numConst
 CONST realConst
 CONST char
+
+ALT_C_FUNCT identifier ( ALT_ARGS )
+ALT_C_FUNCT identifier ( )
 
 E_REL E_REL ou E_E
 E_REL E_E
@@ -126,10 +129,10 @@ E_E E_E e E_NPL
 E_E E_NPL
 
 E_NPL ( E_REL )
-E_NPL nao E_COMP
 E_NPL nao ( E_REL )
 E_NPL E_COMP
 
+E_COMP nao E_COMP
 E_COMP E_ARIT LOP E_ARIT
 
 LOP ==
